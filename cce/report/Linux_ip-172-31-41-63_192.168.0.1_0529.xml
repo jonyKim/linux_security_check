@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CSAP_CCE>
+***************************************************************************
+*                                                                         *
+*            Linux CCE(Common Configuration Enumeration) Check            *
+*            Version : 4.2                                                *
+*            Copyright : KISA                                             *
+*                                                                         *
+***************************************************************************
+ 
+[start_time]
+2024-05-29 03:55:54
+[/start_time]
+
+[hostname]
+ip-172-31-41-63
+[/hostname]
+
+[Version]
+6.2.0-1017-aws
+
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.3 LTS"
+PRETTY_NAME="Ubuntu 22.04.3 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.3 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+[/Version]
+
+[OS_Bit_Check]
+x86_64
+[/OS_Bit_Check]
+
+[openssl 버전 확인]
+<![CDATA[
+OpenSSL 3.0.2 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+]]>
+
+[openssl 패키지 버전]
+<![CDATA[
+3.0.2-0ubuntu1.15
+]]>
+
+
+[IP] <![CDATA[
+<< IP 설정 확인 >>
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq state UP group default qlen 1000
+    link/ether 0a:6b:f0:ce:69:60 brd ff:ff:ff:ff:ff:ff
+    inet 172.31.41.63/20 metric 100 brd 172.31.47.255 scope global dynamic ens5
+       valid_lft 2509sec preferred_lft 2509sec
+    inet6 fe80::86b:f0ff:fece:6960/64 scope link 
+       valid_lft forever preferred_lft forever
+
+]]> [/IP]
+[netstat] <![CDATA[
+[TCP OPEN PORT 확인]
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+LISTEN 0      128          0.0.0.0:22        0.0.0.0:*          
+LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*          
+LISTEN 0      128             [::]:22           [::]:*          
+LISTEN 0      511                *:3000            *:*    users:(("next-server",pid=174428,fd=18))
+
+[UDP OPEN PORT 확인]
+State  Recv-Q Send-Q     Local Address:Port Peer Address:PortProcess
+UNCONN 0      0          127.0.0.53%lo:53        0.0.0.0:*          
+UNCONN 0      0      172.31.41.63%ens5:68        0.0.0.0:*          
+UNCONN 0      0              127.0.0.1:323       0.0.0.0:*          
+UNCONN 0      0                  [::1]:323          [::]:*          
+
+]]> [/netstat]
+======================================================================================
+<U-01>
+<Result>Weak</Result>
+<Comment>root 계정의 원격 접속 제한설정이 적용되어 있지 않으므로 취약함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+cat /etc/ssh/sshd_config | grep PermitRootLogin
+---------------------------------------------------
+#PermitRootLogin prohibit-password
+# the setting of "PermitRootLogin without-password".
+
+---------------------------------------------------
+cat /etc/securetty
+---------------------------------------------------
+cat: /etc/securetty: No such file or directory
+]]>
+</DATA>
+
+
+[Check]:
+1./etc/securetty 파일에 pts/0 ~ pts/x 관련 설정이 존재하지 않고
+2./etc/ssh/sshd_config 파일에서 PermitRootlogin 설정이 no로 되어있으면 양호
+</U-01>
+======================================================================================
+
+======================================================================================
+<U-02>
+<Result>Info</Result>
+<Comment>인터뷰</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+cat /etc/pam.d/system-auth
+---------------------------------------------------
+cat: /etc/pam.d/system-auth: No such file or directory
+
+---------------------------------------------------
+cat /etc/security/pwquality.conf
+---------------------------------------------------
+cat: /etc/security/pwquality.conf: No such file or directory
+
+---------------------------------------------------
+cat /etc/pam.d/common-password
+---------------------------------------------------
+#
+# /etc/pam.d/common-password - password-related modules common to all services
+#
+# This file is included from other service-specific PAM config files,
+# and should contain a list of modules that define the services to be
+# used to change user passwords.  The default is pam_unix.
+
+# Explanation of pam_unix options:
+# The "yescrypt" option enables
+#hashed passwords using the yescrypt algorithm, introduced in Debian
+#11.  Without this option, the default is Unix crypt.  Prior releases
+#used the option "sha512"; if a shadow password hash will be shared
+#between Debian 11 and older releases replace "yescrypt" with "sha512"
+#for compatibility .  The "obscure" option replaces the old
+#`OBSCURE_CHECKS_ENAB' option in login.defs.  See the pam_unix manpage
+#for other options.
+
+# As of pam 1.0.1-6, this file is managed by pam-auth-update by default.
+# To take advantage of this, it is recommended that you configure any
+# local modules either before or after the default block, and use
+# pam-auth-update to manage selection of other modules.  See
+# pam-auth-update(8) for details.
+
+# here are the per-package modules (the "Primary" block)
+password	[success=1 default=ignore]	pam_unix.so obscure yescrypt
+# here's the fallback if no module succeeds
+password	requisite			pam_deny.so
+# prime the stack with a positive return value if there isn't one already;
+# this avoids us returning an error just because nothing sets a success code
+# since the modules above will each just jump around
+password	required			pam_permit.so
+# and here are more per-package modules (the "Additional" block)
+# end of pam-auth-update config
+
+]]>
+</DATA>
+[Check]: 영어 대/소문자, 숫자, 특수문자 혼합하여 8자리 이상 또는 2가지 조합으로 10자리 이상의 패스워드 설정
+Ref파일 참고: /etc/pam.d/system-auth, /etc/security/pwquality.conf, /etc/pam.d/common-password
+※ lcredit=-1(최소 소문자 요구), ucredit=-1(최소 대문자 요구), dcredit=-1(최소 숫자 요구), ocredit=-1(최소 특수문자 요구), minlen=8(최소 8자리 이상)
+※ enforce_for_root(root 계정의 경우에도 정책 적용) 설정 필수
+======================================================================================
+
+</U-02>
+======================================================================================
+<U-03>
+<Result>Weak</Result>
+<Comment>계정잠금 임계값 설정이 미흡(5회 초과)하므로 취약함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/pam.d/system-auth | grep auth | grep required | grep deny= 
+---------------------------------------------------
+
+---------------------------------------------------
+cat /etc/pam.d/password-auth | grep auth | grep required | grep deny= 
+---------------------------------------------------
+
+---------------------------------------------------
+cat /etc/pam.d/common-auth | grep auth | grep required | grep deny= 
+---------------------------------------------------
+]]>
+</DATA>
+
+[Check]: 계정잠금 임계값 설정을 5회 이하로 제한하는 경우 양호
+※ RHEL(CentOS) 계열의 경우 system-auth(Console 접근) 및 password-auth(X-window/SSH 접근) 파일 모두 설정해야함
+※ Ubuntu의 경우 common-auth 파일만 설정하면됨
+======================================================================================
+</U-03>
+
+======================================================================================
+<U-04>
+<Result>Good</Result>
+<Comment>패스워드 최대 사용기간이 적절하게 설정되어 있으므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+PASS_MAX_DAYS 설정 확인
+---------------------------------------------------
+PASS_MAX_DAYS   90
+
+---------------------------------------------------
+각 계정별 설정 확인
+---------------------------------------------------
+패스워드 최대 사용기간 90일을 초과하는 계정이 존재하지 않음
+]]>
+</DATA>
+
+[Check]: 패스워드 최대 사용기간 적절하게(90일 이하) 설정되어 있는지 확인
+======================================================================================
+</U-04>
+
+======================================================================================
+<U-05>
+<Result>Good</Result>
+<Comment>shadow 파일에 패스워드를 저장하고 있으므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+ls -alL /etc/shadow
+---------------------------------------------------
+-rw-r----- 1 root shadow 1066 May 28 12:52 /etc/shadow
+]]>
+</DATA>
+
+[Check]: 패스워드를 shadow 파일에 저장하면 양호
+======================================================================================
+</U-05>
+
+======================================================================================
+<U-06>
+<Result>Good</Result>
+<Comment>PATH 설정에 '.' or '..'이 포함되어 있지 않으므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+PATH 환경변수
+---------------------------------------------------
+/home/ubuntu/.nvm/versions/node/v18.18.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+]]>
+</DATA>
+
+[Check]: PATH 환경변수에 '.' or '..'이 맨 앞이나 중간에 포함되지 않으면 양호
+======================================================================================
+</U-06>
+
+======================================================================================
+<U-07>
+<Result>Info</Result>
+<Comment>소유자가 그룹이 존재하지 않는 파일 및 디렉터리 확인필요함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+소유자나 그룹이 존재하지 않는 파일 및 디렉터리 존재여부 확인
+---------------------------------------------------
+find: ‘/etc/ssl/private’: Permission denied
+find: ‘/etc/polkit-1/localauthority’: Permission denied
+find: ‘/etc/sudoers.d’: Permission denied
+find: ‘/etc/multipath’: Permission denied
+find: ‘/tmp/systemd-private-477e58e80f2d4622837213890cb70836-systemd-logind.service-b5t8PA’: Permission denied
+find: ‘/tmp/systemd-private-477e58e80f2d4622837213890cb70836-chrony.service-v2Y56z’: Permission denied
+find: ‘/tmp/snap-private-tmp’: Permission denied
+find: ‘/tmp/systemd-private-477e58e80f2d4622837213890cb70836-systemd-resolved.service-CnnuMI’: Permission denied
+]]>
+</DATA>
+
+[Check]: 소유자나 그룹이 존재하지 않는 파일 및 디렉터리가 없으면 양호
+======================================================================================
+</U-07>
+
+======================================================================================
+<U-08>
+<Result>Good</Result>
+<Comment>/etc/passwd 파일의 퍼미션이 644이하이므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/passwd 파일 소유자 및 권한 확인
+---------------------------------------------------
+-rw-r--r-- 1 root root 1900 Nov  9  2023 /etc/passwd
+]]>
+</DATA>
+
+[Check]: /etc/passwd 파일의 소유자가 root이고, 권한이 644 이하이면 양호
+======================================================================================
+</U-08>
+
+======================================================================================
+<U-09>
+<Result>Weak</Result>
+<Comment>/etc/shadow 파일의 퍼미션이 400이상이므로 취약함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/shadow 파일 소유자 및 권한 확인
+---------------------------------------------------
+-rw-r----- 1 root shadow 1066 May 28 12:52 /etc/shadow
+]]>
+</DATA>
+
+[Check]: /etc/shadow 파일의 소유자가 root이고, 권한이 400 이하이면 양호
+======================================================================================
+</U-09>
+
+======================================================================================
+<U-10>
+<Result>Good</Result>
+<Comment>/etc/hosts 파일의 퍼미션이 644이하이므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/hosts 파일 소유자 및 권한 확인
+---------------------------------------------------
+-rw------- 1 root root 221 Sep 18  2023 /etc/hosts
+]]>
+</DATA>
+
+[Check]: /etc/hosts 파일의 소유자가 root이고, 권한이 644 이하이면 양호
+======================================================================================
+</U-10>
+
+======================================================================================
+<U-11>
+<Result>Info</Result>
+<Comment>/etc/(x)inetd.conf 파일이 존재하지 않음</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: /etc/(x)inetd.conf 파일의 소유자가 root이고, 권한이 644 이하이면 양호
+======================================================================================
+</U-11>
+
+======================================================================================
+<U-12>
+<Result>Good</Result>
+<Comment>/etc/rsyslog.conf 파일의 퍼미션이 644이하이므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/rsyslog.conf 파일 소유자 및 권한 설정
+---------------------------------------------------
+-rw-r----- 1 root root 1451 May 28 12:54 /etc/rsyslog.conf
+]]>
+</DATA>
+
+[Check]: /etc/(r)syslog.conf 파일의 소유자가 root이고, 권한이 644 이하이면 양호
+======================================================================================
+</U-12>
+
+======================================================================================
+<U-13>
+<Result>Good</Result>
+<Comment>/etc/services 파일의 퍼미션이 644이하이므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/services 파일 소유자 및 권한 확인
+---------------------------------------------------
+-rw-r--r-- 1 root root 12813 Mar 27  2021 /etc/services
+]]>
+</DATA>
+
+[Check]: /etc/services 파일의 소유자가 root이고, 권한이 644 이하이면 양호
+======================================================================================
+
+</U-13>
+======================================================================================
+<U-14>
+<Result>Weak</Result>
+<Comment>주요 파일의 권한에 SUID/SGID에 대한 설정이 부여되어 있으므로 취약함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+주요 파일의 SUID/SGID 설정 확인
+---------------------------------------------------
+/sbin/dump 이 없습니다
+/usr/bin/lpq-lpd 이 없습니다
+-rwsr-xr-x 1 root root 40496 Feb  6 12:54 /usr/bin/newgrp
+/sbin/restore 이 없습니다
+/usr/bin/lpr 이 없습니다
+/usr/sbin/lpc 이 없습니다
+-rwxr-sr-x 1 root shadow 26776 Jan 10 13:54 /sbin/unix_chkpwd
+/usr/bin/lpr-lpd 이 없습니다
+/usr/sbin/lpc-lpd 이 없습니다
+/usr/bin/at 이 없습니다
+/usr/bin/lprm 이 없습니다
+/usr/sbin/traceroute 이 없습니다
+/usr/bin/lpq 이 없습니다
+/usr/bin/lprm-lpd 이 없습니다
+]]>
+</DATA>
+
+[Check]: 주요 파일의 권한에 SUID/SGID가 설정되어 있으면 취약
+======================================================================================
+</U-14>
+
+======================================================================================
+<U-15>
+<Result>Info</Result>
+<Comment>수동확인 필요함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+가. 사용자 홈 디렉터리 권한 확인
+---------------------------------------------------
+drwxr-xr-x 15 root root 3320 Mar  5 16:02 /dev
+drwxr-x--- 13 ubuntu ubuntu 4096 May 28 12:49 /home/ubuntu
+drwx------ 4 root root 4096 May 28 15:45 /root
+drwxr-xr-x 2 root root 40 Jan  5 06:33 /run/sshd
+drwxr-xr-x 24 root root 600 May 29 03:53 /run/systemd
+drwxr-xr-x 2 root root 60 Apr 12 06:43 /run/uuidd
+drwxr-xr-x 2 root root 4096 Apr 18  2022 /usr/games
+drwxr-xr-x 2 root root 20480 May 29 03:53 /usr/sbin
+drwxr-xr-x 2 root root 4096 May 24 00:00 /var/backups
+drwxr-xr-x 35 man man 4096 May 29 03:53 /var/cache/man
+drwxr-x--- 2 pollinate daemon 4096 Nov  9  2023 /var/cache/pollinate
+drwxr-x--- 2 _chrony _chrony 4096 May 29 03:21 /var/lib/chrony
+drwxr-xr-x 2 landscape landscape 4096 Nov  9  2023 /var/lib/landscape
+drwxr-xr-x 2 tss tss 4096 Jan 25  2022 /var/lib/tpm
+drwxrwsr-x 2 root mail 4096 Sep 19  2023 /var/mail
+drwx--x--x 2 root root 4096 Apr 24 02:43 /var/snap/lxd/common/lxd
+---------------------------------------------------
+나. 사용자 환경변수 파일의 권한 확인
+---------------------------------------------------
+-rw-r--r-- 1 ubuntu ubuntu 807 Jan  6  2022 /home/ubuntu/.profile
+-rw-r--r-- 1 ubuntu ubuntu 3968 Nov  9  2023 /home/ubuntu/.bashrc
+-rw------- 1 ubuntu ubuntu 3225 May 28 15:45 /home/ubuntu/.bash_history
+
+]]>
+</DATA>
+[Check]: 홈 디렉터리 환경변수 파일 소유자가 root 또는 해당 계정이고, 접근 권한은 644이면 양호
+======================================================================================
+</U-15>
+
+======================================================================================
+<U-16>
+<Result>Info</Result>
+<Comment>world writable 파일 목록 확인필요</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+world writable 파일목록
+---------------------------------------------------
+    80936      4 drwxrwxrwt   6 root     root         4096 May 29 03:53 /var/tmp
+   258309      4 drwxrwxrwt   2 root     root         4096 Dec 14 13:37 /var/tmp/cloud-init
+    80947      4 drwxrwxrwt   2 root     root         4096 Sep 19  2023 /var/crash
+     1554      4 drwxrwxrwt  22 root     root         4096 May 29 03:53 /tmp
+     1608      4 drwxrwxrwt   2 root     root         4096 Dec 14 13:37 /tmp/.X11-unix
+     1736      4 drwxrwxrwt   2 root     root         4096 Dec 14 13:37 /tmp/.XIM-unix
+     1734      4 drwxrwxrwt   2 root     root         4096 Dec 14 13:37 /tmp/.ICE-unix
+     1748      4 drwxrwxrwt   2 root     root         4096 Dec 14 13:37 /tmp/.font-unix
+     1760      4 drwxrwxrwt   2 root     root         4096 Dec 14 13:37 /tmp/.Test-unix
+]]>
+</DATA>
+
+[Check]: world writable 파일이 존재하지 않거나, 존재 시 설정 이유를 확인하고 있으면 양호
+======================================================================================
+</U-16>
+
+======================================================================================
+<U-17>
+<Result>Good</Result>
+<Comment>R 서비스가 동작중이 아니므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: login, shell, exec 서비스를 사용하지 않거나 아래와 같은 설정이 적용된 경우 양호
+/etc/hosts.equiv 및 /home/ubuntu/.rhosts 파일 소유자가 root 또는, 해당 계정인 경우
+/etc/hosts.equiv 및 /home/ubuntu/.rhosts 파일 권한이 600 이하인 경우
+/etc/hosts.equiv 및 /home/ubuntu/.rhosts 파일 설정에 ‘+’ 설정이 없는 경우
+======================================================================================
+</U-17>
+
+======================================================================================
+<U-18>
+<Result>Weak</Result>
+<Comment>/etc/hosts.allow파일 또는 /etc/hosts.deny파일의 권한이 640이상이므로 취약함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/hosts.allow 파일
+---------------------------------------------------
+-rw-r--r-- 1 root root 411 Sep 19  2023 /etc/hosts.allow
+# /etc/hosts.allow: list of hosts that are allowed to access the system.
+#                   See the manual pages hosts_access(5) and hosts_options(5).
+#
+# Example:    ALL: LOCAL @some_netgroup
+#             ALL: .foobar.edu EXCEPT terminalserver.foobar.edu
+#
+# If you're going to protect the portmapper use the name "rpcbind" for the
+# daemon name. See rpcbind(8) and rpc.mountd(8) for further information.
+#
+
+
+---------------------------------------------------
+/etc/hosts.deny 파일
+---------------------------------------------------
+-rw-r--r-- 1 root root 711 Sep 19  2023 /etc/hosts.deny
+# /etc/hosts.deny: list of hosts that are _not_ allowed to access the system.
+#                  See the manual pages hosts_access(5) and hosts_options(5).
+#
+# Example:    ALL: some.host.name, .some.domain
+#             ALL EXCEPT in.fingerd: other.host.name, .other.domain
+#
+# If you're going to protect the portmapper use the name "rpcbind" for the
+# daemon name. See rpcbind(8) and rpc.mountd(8) for further information.
+#
+# The PARANOID wildcard matches any host whose name does not match its
+# address.
+#
+# You may wish to enable this to ensure any programs that don't
+# validate looked up hostnames still leave understandable logs. In past
+# versions of Debian this has been the default.
+# ALL: PARANOID
+
+
+---------------------------------------------------
+iptables 설정
+---------------------------------------------------
+iptables v1.8.7 (nf_tables): Could not fetch rule set generation id: Permission denied (you must be root)
+
+
+---------------------------------------------------
+firewalld 설정
+---------------------------------------------------
+./linux_v4.3.bin: line 1273: firewall-cmd: command not found
+
+]]>
+</DATA>
+[Check]: 
+1. hosts.deny 파일에 ALL Deny 설정후 hosts.allow 파일에 특정 호스트 접속 허용한 경우 양호
+2. hosts.deny, allow 파일에 설정이 존재하지 않을 시 iptbales 또는 firewalld 설정에서 특정 호스트 접속을 허용한 경우 양호
+======================================================================================
+</U-18>
+
+======================================================================================
+<U-19>
+<Result>Good</Result>
+<Comment>cron 파일의 소유자가 root이고 접근권한이 640이하이므로 양호함</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+/etc/cron.allow 파일
+---------------------------------------------------
+-rw------- 1 root root 0 May 28 12:53 /etc/cron.allow
+
+---------------------------------------------------
+/etc/cron.deny 파일
+---------------------------------------------------
+-rw------- 1 root root 0 May 28 12:53 /etc/cron.deny
+
+]]>
+</DATA>
+[Check]: cron 파일 소유자가 root이고, 권한이 640이하이면 양호
+======================================================================================
+</U-19>
+
+======================================================================================
+<U-20>
+<Result>Good</Result>
+<Comment>현재 finger 서비스가 동작하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: Finger 서비스가 비활성화 되어 있으면 양호
+======================================================================================
+</U-20>
+
+======================================================================================
+<U-21>
+<Result>Good</Result>
+<Comment>FTP 서비스가 동작중이 아니므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: Anonymous FTP 접속을 차단한 경우 양호
+======================================================================================
+</U-21>
+
+======================================================================================
+<U-22>
+<Result>Good</Result>
+<Comment>현재 rsh, rlogin, rexec 서비스가 동작하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: r계열 서비스가 비활성화 되어 있는 경우 양호
+======================================================================================
+</U-22>
+
+======================================================================================
+<U-23>
+<Result>Good</Result>
+<Comment>echo, discard, daytime, chargen 서비스가 동작하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: DoS 공격에 취약한 서비스(echo, discard, daytime, chargen)가 비활성화되어 있으면 양호
+======================================================================================
+</U-23>
+
+======================================================================================
+<U-24>
+<Result>Good</Result>
+<Comment>현재 NFS 서비스가 동작하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: NFS 서비스 관련 데몬(mountd|nfs)이 비활성화 되어있으면 양호
+======================================================================================
+</U-24>
+
+======================================================================================
+<U-25>
+<Result>Good</Result>
+<Comment>NFS 서비스가 비활성화되어 있으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+
+]]>
+</DATA>
+[Check]: everyone 공유가 되어있지 않는 경우 양호
+[/etc/exports 파일 설정 방법]
+취약한 설정 예시: /var/www/img *(ro,all_squash)
+양호한 설정 예시: /data 172.27.0.0/16(rw,no_root_squash)
+======================================================================================
+</U-25>
+
+======================================================================================
+<U-26>
+<Result>Good</Result>
+<Comment>automount 데몬이 동작중이지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: automound 서비스가 비활성화 되어있는 경우 양호
+======================================================================================
+</U-26>
+
+======================================================================================
+<U-27>
+<Result>Good</Result>
+<Comment>현재 RPC 서비스가 동작하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: RPC 서비스가 비활성화 되어 있는 경우 양호
+RPC 서비스: rpc.cmsd|rpc.ttdbserverd|sadmind|rusersd|walld|sprayd|rstatd|rpc.nisd|rpc.pcnfsd|rpc.statd|rpc.ypupdated|rpc.rquotad|kcms_server|cachefsd|rexd
+Ref파일 참고: /etc/xinetd.d/rstatd, /etc/inetd.conf
+======================================================================================
+</U-27>
+
+======================================================================================
+<U-28>
+<Result>Good</Result>
+<Comment>NIS , NIS+ 서비스가 동작중이지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: NIS 서비스가 비활성화 되어 있거나, 필요 시 NIS+를 사용하는 경우 양호
+NIS , NIS+ 서비스: ypserv|ypbind|ypxfrd|rpc.yppasswdd|rpc.ypupdated|rpc.nisd
+======================================================================================
+</U-28>
+
+======================================================================================
+<U-29>
+<Result>Good</Result>
+<Comment>tftp, talk 서비스가 동작하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: tftp, talk, ntalk 서비스(tftp|talk|ntalk)가 비활성화 되어있는 경우 양호
+Ref파일 참고: /etc/xinetd.d/tftp, /etc/xinetd.d/talk, /etc/xinetd.d/ntalk
+======================================================================================
+</U-29>
+
+======================================================================================
+<U-30>
+<Result>Good</Result>
+<Comment>Sendmail 서비스가 동작중이지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: Sendmail 서비스가 동작중이지 않거나 최신버전의 Sendmail을 사용할 경우 앙호
+======================================================================================
+</U-30>
+
+======================================================================================
+<U-31>
+<Result>Good</Result>
+<Comment>Sendmail 서비스가 동작중이지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+
+]]>
+</DATA>
+[Check]: SMTP 서비스를 사용하지 않거나 릴레이 제한이 설정되어 있는 경우 양호
+Ref파일 참고: /etc/mail/sendmail.cf
+======================================================================================
+</U-31>
+
+======================================================================================
+<U-32>
+<Result>Good</Result>
+<Comment>Sendmail 서비스가 동작중이지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+
+]]>
+</DATA>
+[Check]: Sendmail 설정파일의 PrivacyOptions에 restrictqrun 설정이 적용되어 있으면 양호
+======================================================================================
+</U-32>
+
+======================================================================================
+<U-33>
+<Result>Good</Result>
+<Comment>DNS 서비스를 사용하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+
+]]>
+</DATA>
+[Check]: DNS 서비스를 사용하지 않거나 주기적으로 패치를 관리하고 있는경우 양호
+======================================================================================
+</U-33>
+
+======================================================================================
+<U-34>
+<Result>Good</Result>
+<Comment>DNS 서비스를 사용하지 않으므로 양호함</Comment>
+<DATA> 
+ <![CDATA[
+
+]]>
+</DATA>
+[Check]: DNS 서비스를 사용하지 않거나 Zone Transfer를 허가된 사용자에게만 허용한 경우 양호
+======================================================================================
+</U-34>
+
+======================================================================================
+<U-35>
+<Result>Info</Result>
+<Comment>최신 보안패치 및 벤더 권고사항 확인필요</Comment>
+---------------------------------------------------
+<DATA> 
+ <![CDATA[
+Linux Version
+---------------------------------------------------
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.3 LTS"
+PRETTY_NAME="Ubuntu 22.04.3 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.3 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+
+---------------------------------------------------
+Kernel Version
+---------------------------------------------------
+6.2.0-1017-aws
+
+---------------------------------------------------
+Debian Linux Detail Version
+---------------------------------------------------
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.3 LTS
+Release:	22.04
+Codename:	jammy
+]]>
+</DATA>
+
+[Check]: 패치 적용 정책을 수립하여 주기적으로 패치를 관리하고 있는 경우 양호
+======================================================================================
+</U-35>
+
+======================================================================================
+<U-36>
+<Result>Info</Result>
+<Comment>인터뷰</Comment>
+<DATA> 
+ <![CDATA[
+]]>
+</DATA>
+
+[Check]: 로그 기록의 검토/분석/리포트 작성 및 보고 등이 정기적으로 이루어지는 경우 양호
+======================================================================================
+</U-36>
+
+
+[참고]
+#================================================================================
+/etc/passwd
+#================================================================================
+<![CDATA[
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:102:105::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:103:106:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+syslog:x:104:111::/home/syslog:/usr/sbin/nologin
+_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
+tss:x:106:112:TPM software stack,,,:/var/lib/tpm:/bin/false
+uuidd:x:107:113::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:108:114::/nonexistent:/usr/sbin/nologin
+sshd:x:109:65534::/run/sshd:/usr/sbin/nologin
+pollinate:x:110:1::/var/cache/pollinate:/bin/false
+landscape:x:111:116::/var/lib/landscape:/usr/sbin/nologin
+fwupd-refresh:x:112:117:fwupd-refresh user,,,:/run/systemd:/usr/sbin/nologin
+ec2-instance-connect:x:113:65534::/nonexistent:/usr/sbin/nologin
+_chrony:x:114:121:Chrony daemon,,,:/var/lib/chrony:/usr/sbin/nologin
+ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
+lxd:x:999:100::/var/snap/lxd/common/lxd:/bin/false
+]]>
+ 
+#================================================================================
+/etc/shadow
+#================================================================================
+<![CDATA[
+cat: /etc/shadow: Permission denied
+]]>
+ 
+#================================================================================
+/etc/pam.d/system-auth
+#================================================================================
+<![CDATA[
+cat: /etc/pam.d/system-auth: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/pam.d/password-auth
+#================================================================================
+<![CDATA[
+cat: /etc/pam.d/password-auth: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/pam.d/common-password
+#================================================================================
+<![CDATA[
+#
+# /etc/pam.d/common-password - password-related modules common to all services
+#
+# This file is included from other service-specific PAM config files,
+# and should contain a list of modules that define the services to be
+# used to change user passwords.  The default is pam_unix.
+
+# Explanation of pam_unix options:
+# The "yescrypt" option enables
+#hashed passwords using the yescrypt algorithm, introduced in Debian
+#11.  Without this option, the default is Unix crypt.  Prior releases
+#used the option "sha512"; if a shadow password hash will be shared
+#between Debian 11 and older releases replace "yescrypt" with "sha512"
+#for compatibility .  The "obscure" option replaces the old
+#`OBSCURE_CHECKS_ENAB' option in login.defs.  See the pam_unix manpage
+#for other options.
+
+# As of pam 1.0.1-6, this file is managed by pam-auth-update by default.
+# To take advantage of this, it is recommended that you configure any
+# local modules either before or after the default block, and use
+# pam-auth-update to manage selection of other modules.  See
+# pam-auth-update(8) for details.
+
+# here are the per-package modules (the "Primary" block)
+password	[success=1 default=ignore]	pam_unix.so obscure yescrypt
+# here's the fallback if no module succeeds
+password	requisite			pam_deny.so
+# prime the stack with a positive return value if there isn't one already;
+# this avoids us returning an error just because nothing sets a success code
+# since the modules above will each just jump around
+password	required			pam_permit.so
+# and here are more per-package modules (the "Additional" block)
+# end of pam-auth-update config
+]]>
+ 
+#================================================================================
+/etc/security/pwquality.conf
+#================================================================================
+<![CDATA[
+cat: /etc/security/pwquality.conf: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/xinetd.d/rstatd
+#================================================================================
+<![CDATA[
+cat: /etc/xinetd.d/rstatd: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/inetd.conf
+#================================================================================
+<![CDATA[
+cat: /etc/inetd.conf: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/xinetd.d/tftp
+#================================================================================
+<![CDATA[
+cat: /etc/xinetd.d/tftp: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/xinetd.d/talk
+#================================================================================
+<![CDATA[
+cat: /etc/xinetd.d/talk: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/xinetd.d/ntalk
+#================================================================================
+<![CDATA[
+cat: /etc/xinetd.d/ntalk: No such file or directory
+]]>
+ 
+#================================================================================
+/etc/mail/sendmail.cf
+#================================================================================
+<![CDATA[
+cat: /etc/mail/sendmail.cf: No such file or directory
+]]>
+ 
+</CSAP_CCE>
