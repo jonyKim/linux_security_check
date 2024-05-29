@@ -1,12 +1,16 @@
 #!/bin/bash
 
+# IP 주소 가져오기
+IP_ADDRESS=$(hostname -I | awk '{print $1}')
+
 # 현재 날짜와 시간을 사용하여 결과 파일 이름 생성
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-RESULT_FILE="./report/security_check_results_${TIMESTAMP}.log"
+RESULT_FILE="./report/security_check_results_${IP_ADDRESS}_${TIMESTAMP}.log"
+
+# 결과 파일 초기화
 > $RESULT_FILE
 
 # 시스템 정보 추가
-IP_ADDRESS=$(hostname -I | awk '{print $1}')
 echo "Security Check Results" >> $RESULT_FILE
 echo "IP Address: $IP_ADDRESS" >> $RESULT_FILE
 echo "Execution Date: $(date)" >> $RESULT_FILE
