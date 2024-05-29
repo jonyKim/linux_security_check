@@ -12,5 +12,5 @@ INFO http://www.redhat.com/security/updates/
 INFO http://www.redhat.com/security/updates/eol/ -Red Hat Linux 9 이하 버전
 INFO 2.발표된 Update 중 현재 사용 중인 보안 관련 Update 찾아 해당 Update Download
 INFO 3.Update 설치
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

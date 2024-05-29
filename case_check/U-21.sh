@@ -12,5 +12,5 @@ PERM1=600
 PERM2=rw-------
 FILEUSER=root
 ./check_perm.sh $FILE $PERM1 $PERM2 $FILEUSER
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

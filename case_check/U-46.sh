@@ -27,5 +27,5 @@ WARN $DAEMON이 활성화 되어 있습니다.
 fi
 fi
 done
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

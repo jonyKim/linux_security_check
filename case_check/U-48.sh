@@ -23,5 +23,5 @@ else
 OK SMTP 릴레이 제한이 설정되어 있습니다.
 fi
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

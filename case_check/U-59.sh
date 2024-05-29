@@ -13,5 +13,5 @@ OK SSH 프로토콜을 사용하고 있습니다.
 else
 WARN SSH 프로토콜을 사용하고 있지 않습니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

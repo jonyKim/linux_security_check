@@ -11,5 +11,5 @@ EOF
 BAR
 find / -xdev -user root -type f -perm -4000 -o -perm -2000 -exec ls -al {} \; > $TMP1
 INFO $TMP1 를 확인하십시오. 
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

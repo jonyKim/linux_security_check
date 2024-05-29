@@ -24,5 +24,5 @@ fi
 if [ -n $TUREFLASE ] ; then
 OK 매뉴얼 파일 및 디렉터리가 존재하지 않습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

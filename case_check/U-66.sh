@@ -14,5 +14,5 @@ WARN SNMP 서비스를 사용하고 있습니다.
 else
 OK SNMP 서비스를 사용하지 않고 있습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

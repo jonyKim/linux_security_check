@@ -69,3 +69,6 @@ WARN $i 파일에 대한 서비스가 활성화 되어 있습니다.
 fi
 done
 fi
+
+cat $RESULT
+echo; echo

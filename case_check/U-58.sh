@@ -15,5 +15,5 @@ OK DocumentRoot 설정이 양호 합니다.
 else
 WARN $FILE의 DocumentRoot가 기본 디렉터리로 지정되어 있습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

@@ -21,5 +21,5 @@ fi
 else 
 OK DNS 서비스를 사용하고 있지 않습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

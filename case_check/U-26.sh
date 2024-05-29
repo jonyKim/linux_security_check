@@ -24,5 +24,5 @@ INFO $TMP1을 확인하십시오.
 else
 OK world writable 파일이 존재하지 않습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

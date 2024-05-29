@@ -21,5 +21,5 @@ WARN root 계정 접속이 차단되지 않았습니다.
 INFO $FILE에 root 계정을 추가 하십시오, 
 fi
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

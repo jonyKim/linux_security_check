@@ -33,5 +33,5 @@ done
 if [ $TRUEFALSE -eq 1 ] ; then
 OK 환경 변수의 소유자 설정이 양호합니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

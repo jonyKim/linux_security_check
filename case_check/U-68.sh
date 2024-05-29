@@ -23,5 +23,5 @@ INFO $FILE2에 메시지를 변경하십시오.
 else
 OK Telnet 로그온 메시지가 있습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

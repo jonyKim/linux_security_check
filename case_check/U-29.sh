@@ -15,5 +15,5 @@ else
 WARN /etc/hosts.deny 파일에 ALL Deny 설정이 되어 있지 않습니다. 
 INFO /etc/hosts.deny , /etc/hosts.allow 설정을 확인하십시오. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

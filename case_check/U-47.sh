@@ -22,5 +22,5 @@ else
 WARN Sendmail $VERSION 사용중입니다. 8.13.8 버전으로 업데이트 하십시오.
 fi
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

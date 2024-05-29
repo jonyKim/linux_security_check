@@ -23,5 +23,5 @@ INFO $FILE 의 디렉터리의 AllowOverride 지시자의 옵션을 AuthConfig �
 else
 OK 상위 디렉터리에 이동제한이 설정되어 있습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

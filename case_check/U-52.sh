@@ -20,5 +20,5 @@ fi
 else
 OK Apache서버를 사용하지 않습니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

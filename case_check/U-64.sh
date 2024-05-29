@@ -24,5 +24,5 @@ if [ $? -eq 0 ] ; then
 else
 WARN $FILE2가 없습니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

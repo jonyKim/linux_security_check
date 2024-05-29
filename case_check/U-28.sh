@@ -54,5 +54,5 @@ fi
 if [ $TUREFALSE -eq 1 ] ; then
 OK /etc/hosts.equiv 및 사용자의 .rhosts 파일 설정이 양호합니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

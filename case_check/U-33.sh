@@ -28,5 +28,5 @@ done
 if [ $TUREFALSE -eq 1 ] ; then
 OK 사용자의 홈 디렉터리 소유자와 권한 설정이 양호합니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

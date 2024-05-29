@@ -1,0 +1,6 @@
+[ ERROR ] /root/scripts/passwd not found
+[ ERROR ] /root/scripts/shadow not found
+[ ERROR ] /root/scripts/hosts not found
+[ ERROR ] /root/scripts/xinetd.conf not found
+[ ERROR ] /root/scripts/rsyslog.conf not found
+[ ERROR ] /root/scripts/services not found

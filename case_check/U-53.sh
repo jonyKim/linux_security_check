@@ -23,5 +23,5 @@ INFO $FILE의 User와 Group의 계정을 root가 아닌 사용자로 바꾸십�
 else
 OK Apache 데몬이 root의 권한으로 구동되지 않습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

@@ -17,5 +17,5 @@ INFO vi /etc/nsswitch.conf
 else
 OK NIS 서비스가 비활성화 되어 있습니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

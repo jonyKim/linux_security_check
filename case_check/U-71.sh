@@ -19,5 +19,5 @@ fi
 else
 OK Apache 웹 서비스를 사용하지 않습니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

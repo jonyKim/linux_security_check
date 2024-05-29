@@ -17,5 +17,5 @@ else
 WARN 심볼릭 링크를 사용하고 있습니다.
 INFO $FILE에 설정된 디렉터리의 Options의 FollowSymLinks를 제거 하십시오.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

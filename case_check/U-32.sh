@@ -14,5 +14,5 @@ else
 WARN UMASK 값이 022 이하로 설정되어 있지 않습니다.
 INFO /etc/bashrc 파일을 수정하십시오.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

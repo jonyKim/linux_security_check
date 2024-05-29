@@ -26,5 +26,5 @@ if [ $? -eq 0 ] ; then
 INFO "$TMP 파일을 확인하고 이름을 변경하십시오. (S -> _S or K)"
 fi
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

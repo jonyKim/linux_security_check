@@ -27,5 +27,5 @@ else
 WARN 로그 기록 정책 설정이 취약합니다. 
 INFO $FILE에 $FILE1 내용을 추가/변경 하십시오.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

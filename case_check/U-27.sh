@@ -16,5 +16,5 @@ INFO $TMP1를 확인하십시오.
 else
 OK 파일이 존재하지 않습니다. 
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo

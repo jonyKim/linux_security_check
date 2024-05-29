@@ -13,5 +13,5 @@ OK ftp 계정에 쉘이 부여되어 있지 않습니다.
 else
 WARN ftp 계정에 쉘이 부여되어 있습니다.
 fi
-echo >>$RESULT
-echo >>$RESULT
+cat $RESULT
+echo; echo
