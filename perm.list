@@ -1,0 +1,6 @@
+/root/scripts/passwd root 644 rw-r--r--
+/root/scripts/shadow root 400 r-------
+/root/scripts/hosts root 644 rw-r--r--
+/root/scripts/xinetd.conf root 600 rw-------
+/root/scripts/rsyslog.conf root 644 rw-r--r--
+/root/scripts/services root 644 rw-r--r--
